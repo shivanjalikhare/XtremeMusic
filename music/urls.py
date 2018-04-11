@@ -21,4 +21,8 @@ urlpatterns = [
     #/music/album/2/ delete
     re_path(r'album/(?P<pk>[0-9]+)/delete/$', views.AlbumDelete.as_view(), name='album-delete'),
 
+    re_path(r'^logout_user/$', views.logout_user, name='logout_user'),
+
+    re_path(r'^login_user/$', views.login_user, name='login_user'),
+
 ]
