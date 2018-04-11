@@ -25,4 +25,6 @@ urlpatterns = [
 
     re_path(r'^login_user/$', views.login_user, name='login_user'),
 
+    re_path(r'^songs/(?P<filter_by>[a-zA_Z]+)/$', views.songs, name='songs'),
+
 ]
