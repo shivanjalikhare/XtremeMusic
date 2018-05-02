@@ -21,8 +21,29 @@ class DetailView(generic.DetailView):
 	
 		
 class AlbumCreate(CreateView):
-	model = Album
-	fields = ['artist', 'album_title', 'genre', 'album_logo']
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        form = AlbumForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            album = form.save(commit=False)
+            album.user = request.user
+            album.album_logo = request.FILES['album_logo']
+            file_type = album.album_logo.url.split('.')[-1]
+            file_type = file_type.lower()
+            if file_type not in IMAGE_FILE_TYPES:
+                context = {
+                    'album': album,
+                    'form': form,
+                    'error_message': 'Image file must be PNG, JPG, or JPEG',
+                }
+                return render(request, 'music/create_album.html', context)
+            album.save()
+            return render(request, 'music/detail.html', {'album': album})
+        context = {
+            "form": form,
+        }
+        return render(request, 'music/create_album.html', context)
 
 class AlbumUpdate(UpdateView):
 	model = Album
